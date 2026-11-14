@@ -237,7 +237,7 @@ class Handler(BaseHTTPRequestHandler):
         self.serve_static(path)
 
     def serve_static(self, path):
-        if path not in {"/index.html", "/admin.html", "/styles.css", "/entry.css", "/app.js", "/admin.js"}:
+        if path not in {"/index.html", "/admin.html", "/styles.css", "/admin.css", "/entry.css", "/app.js", "/admin.js"}:
             self.send_error(HTTPStatus.NOT_FOUND)
             return
         candidate = (ROOT / path.lstrip("/")).resolve()
@@ -294,8 +294,8 @@ class Handler(BaseHTTPRequestHandler):
             if not isinstance(username, str) or not hmac.compare_digest(username, ADMIN_USERNAME):
                 self.send_json(HTTPStatus.BAD_REQUEST, {"error": "Admin ID must be pooja9392."})
                 return
-            if not isinstance(password, str) or len(password) < 12:
-                self.send_json(HTTPStatus.BAD_REQUEST, {"error": "Use a password with at least 12 characters."})
+            if not isinstance(password, str) or not password:
+                self.send_json(HTTPStatus.BAD_REQUEST, {"error": "Enter a password."})
                 return
             salt = secrets.token_bytes(16)
             digest = password_hash(password, salt)

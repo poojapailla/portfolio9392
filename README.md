@@ -7,13 +7,13 @@ A self-hosted portfolio with a public visitor page, SQLite-backed editable conte
 1. Install Python 3.9 or newer if it is not already installed.
 2. From this folder, run `python server.py`.
 3. Open `http://127.0.0.1:8000` and choose **Visit portfolio** or **Admin sign in**.
-4. Choose **Admin sign in** (or open `/admin`). The admin ID is `pooja9392`; on first setup, create a private owner password of at least 12 characters.
+4. Choose **Admin sign in** (or open `/admin`). The admin ID is `pooja9392`; on first setup, choose a non-empty owner password.
 
-The owner password is stored as a salted PBKDF2 hash; the dashboard uses an HTTP-only session cookie and CSRF tokens. Do not use a phone number or other publicly known information as the password. The server binds to localhost by default. To host it publicly, put it behind HTTPS and a production-grade reverse proxy, set `PORTFOLIO_HTTPS=1`, configure backups, and only then set `PORTFOLIO_HOST` to a network interface. Never expose the development server directly to the internet.
+The owner password can be any non-empty text and is stored as a salted PBKDF2 hash; the dashboard uses an HTTP-only session cookie and CSRF tokens. Choose a private password and avoid reusing one you use for other accounts. The server binds to localhost by default. To host it publicly, put it behind HTTPS and a production-grade reverse proxy, set `PORTFOLIO_HTTPS=1`, configure backups, and only then set `PORTFOLIO_HOST` to a network interface. Never expose the development server directly to the internet.
 
 ## Edit content and upload assets
 
-The dashboard's JSON editor controls every public section. Keep its JSON valid, then select **Save changes**. Add as many project objects as you need to the `projects` array. The `dates` fields for internships start blank; only enter dates you can verify.
+The dashboard's **Projects** manager includes **Add project** and per-project edit/delete actions. Enter a name, description, optional URL or image path, and optional features (one per line), then save; the public portfolio updates immediately. There is no project-count limit. Save any project edits in the JSON editor before using the project manager. The `dates` fields for internships start blank; only enter dates you can verify.
 
 Upload an image or PDF in the dashboard and copy its returned path into the relevant field:
 
