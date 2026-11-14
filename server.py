@@ -151,6 +151,8 @@ def initialize():
             "INSERT OR IGNORE INTO content (id, body) VALUES (1, ?)",
             (json.dumps(INITIAL_CONTENT, ensure_ascii=False),),
         )
+        snapshot = db.execute("SELECT body FROM content WHERE id = 1").fetchone()["body"]
+    (ROOT / "content.json").write_text(snapshot + "\n", encoding="utf-8")
 
 
 def password_hash(password, salt):
@@ -237,7 +239,7 @@ class Handler(BaseHTTPRequestHandler):
         self.serve_static(path)
 
     def serve_static(self, path):
-        if path not in {"/index.html", "/admin.html", "/styles.css", "/admin.css", "/entry.css", "/app.js", "/admin.js"}:
+        if path not in {"/index.html", "/admin.html", "/styles.css", "/admin.css", "/entry.css", "/app.js", "/admin.js", "/content.json"}:
             self.send_error(HTTPStatus.NOT_FOUND)
             return
         candidate = (ROOT / path.lstrip("/")).resolve()
@@ -361,6 +363,7 @@ class Handler(BaseHTTPRequestHandler):
             serialized = json.dumps(content, ensure_ascii=False)
             with db_connection() as db:
                 db.execute("UPDATE content SET body = ? WHERE id = 1", (serialized,))
+            (ROOT / "content.json").write_text(serialized + "\n", encoding="utf-8")
             self.send_json(200, {"saved": True})
         except (ValueError, json.JSONDecodeError) as error:
             self.send_json(HTTPStatus.BAD_REQUEST, {"error": str(error) or "Invalid content."})

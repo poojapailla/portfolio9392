@@ -26,4 +26,4 @@ Upload an image or PDF in the dashboard and copy its returned path into the rele
 
 For example, set `"resume": {"file": "/uploads/your-file.pdf"}` after uploading the PDF. Resume links appear on the public portfolio only when the file field points to an uploaded PDF.
 
-Portfolio data lives in `data/portfolio.sqlite3`; uploaded files live in `uploads/`. Back up both folders. Uploaded assets support PNG, JPG, WEBP, and PDF up to 10 MB.
+Portfolio data lives in `data/portfolio.sqlite3`; `content.json` is refreshed as a public static snapshot so the portfolio can display saved content on static hosting too. Uploaded files live in `uploads/`. Back up the database and uploads folders. Uploaded assets support PNG, JPG, WEBP, and PDF up to 10 MB.

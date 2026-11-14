@@ -13,15 +13,27 @@ const make = (tag, className, content) => {
   if (content !== undefined) element.textContent = content;
   return element;
 };
+const assetPath = (path) => path.startsWith("/") ? `.${path}` : path;
 
-if (window.location.pathname === "/portfolio") {
+if (window.location.pathname.endsWith("/portfolio") || new URLSearchParams(window.location.search).get("view") === "portfolio") {
   document.body.classList.remove("mode-select");
 }
 
 async function loadPortfolio() {
+  if (!window.location.hostname.endsWith(".github.io")) {
+    try {
+      const response = await fetch("/api/content", { cache: "no-store" });
+      if (response.ok) {
+        renderPortfolio(await response.json());
+        return;
+      }
+    } catch (error) {
+      console.info("Using the static portfolio content snapshot.", error);
+    }
+  }
   try {
-    const response = await fetch("/api/content", { cache: "no-store" });
-    if (!response.ok) throw new Error("Could not load portfolio content.");
+    const response = await fetch("./content.json", { cache: "no-store" });
+    if (!response.ok) throw new Error("Could not load the portfolio content snapshot.");
     renderPortfolio(await response.json());
   } catch (error) {
     console.error(error);
@@ -58,7 +70,7 @@ function renderPortfolio(data) {
   const portrait = $("portrait");
   if (profile.image && profile.image.startsWith("/uploads/")) {
     const image = document.createElement("img");
-    image.src = profile.image;
+    image.src = assetPath(profile.image);
     image.alt = `Portrait of ${profile.name || "Pailla Pooja"}`;
     portrait.replaceChildren(image);
   } else {
@@ -72,11 +84,11 @@ function renderPortfolio(data) {
   const resume = data.resume?.file;
   const resumeLink = $("resume-download");
   if (resume && resume.startsWith("/uploads/") && resume.toLowerCase().endsWith(".pdf")) {
-    resumeLink.href = resume;
+    resumeLink.href = assetPath(resume);
     resumeLink.target = "_blank";
     resumeLink.rel = "noreferrer";
     resumeLink.innerHTML = "View / download resume <span>↗</span>";
-    $("hero-resume").href = resume;
+    $("hero-resume").href = assetPath(resume);
     $("hero-resume").target = "_blank";
     $("hero-resume").rel = "noreferrer";
     $("hero-resume").innerHTML = "View resume <span>↗</span>";
@@ -110,7 +122,7 @@ function renderProjects(items) {
     const card = make("article", "project-card");
     if (item.image?.startsWith("/uploads/")) {
       const image = document.createElement("img");
-      image.src = item.image;
+      image.src = assetPath(item.image);
       image.alt = `${item.name || "Project"} preview`;
       card.append(image);
     } else card.append(make("span", "project-icon", icons[index % icons.length]));
@@ -172,7 +184,7 @@ function renderCertifications(items) {
     content.append(make("h4", "", item.name), make("p", "", item.certification));
     if (item.file?.startsWith("/uploads/")) {
       const anchor = make("a", "", "View certificate ↗");
-      anchor.href = item.file;
+      anchor.href = assetPath(item.file);
       anchor.target = "_blank";
       anchor.rel = "noreferrer";
       content.append(anchor);
@@ -193,4 +205,6 @@ $("navigation").addEventListener("click", (event) => {
     $("menu-toggle").setAttribute("aria-expanded", "false");
   }
 });
-loadPortfolio();
+if (!document.body.classList.contains("mode-select")) {
+  loadPortfolio();
+}

@@ -5,10 +5,10 @@
   <title>Owner Dashboard — Pailla Pooja</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/admin.css"><script src="/admin.js" defer></script>
+  <link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./admin.css"><script src="./admin.js" defer></script>
 </head>
 <body class="admin-body">
-  <header class="site-header admin-header"><a class="brand" href="/"><span class="brand-mark">PP</span><span>Pailla Pooja <span class="admin-label">OWNER</span></span></a><a class="back-link" href="/portfolio">View portfolio ↗</a></header>
+  <header class="site-header admin-header"><a class="brand" href="./"><span class="brand-mark">PP</span><span>Pailla Pooja <span class="admin-label">OWNER</span></span></a><a class="back-link" href="./?view=portfolio">View portfolio ↗</a></header>
   <main class="admin-main">
     <section class="login-card" id="auth-panel"><p class="eyebrow">PRIVATE OWNER AREA</p><h1 id="auth-title">Welcome back.</h1><p class="muted" id="auth-description">Sign in to update your portfolio content and uploads.</p><form id="auth-form"><label for="admin-username">Admin ID</label><input id="admin-username" type="text" value="pooja9392" autocomplete="username" required><label id="password-label" for="admin-password">Owner password</label><input id="admin-password" type="password" autocomplete="current-password" required><p class="form-hint" id="password-hint"></p><button class="button button-primary" type="submit" id="auth-submit">Sign in <span>↗</span></button><p class="form-message" id="auth-message" role="status"></p></form></section>
     <section class="dashboard hidden" id="dashboard">
@@ -51,7 +51,7 @@
             <section class="text-editor-section"><h3>Skills</h3><label for="edit-skills">One category per line</label><textarea id="edit-skills" rows="5" placeholder="Languages: Python, Java, SQL, C&#10;Web Technologies: HTML, CSS, JavaScript&#10;AI: Generative AI Tools, Prompt Engineering"></textarea><p class="form-hint">Write Category: skill one, skill two. Add as many lines and skills as you need.</p></section>
             <section class="text-editor-section"><h3>Certifications</h3><label for="edit-certifications">One certificate per line</label><textarea id="edit-certifications" rows="4" placeholder="HackerRank Certification | Problem Solving&#10;Simplilearn Certification | Generative AI and Prompt Engineering"></textarea><p class="form-hint">Format: Provider | Certificate name | optional uploaded file path. Do not add details you cannot verify.</p></section>
             <section class="text-editor-section"><h3>Resume</h3><div class="plain-field"><label for="edit-resume">Uploaded resume PDF path</label><input id="edit-resume" placeholder="/uploads/your-resume.pdf"></div><p class="form-hint">Upload your PDF on this page, then paste its path here. Leave blank until you upload a resume.</p></section>
-            <div class="editor-actions"><button class="button button-primary" id="save-button" type="submit">Save all text changes <span>↗</span></button><a class="button button-outline" href="/portfolio" target="_blank" rel="noreferrer">Preview portfolio ↗</a></div>
+            <div class="editor-actions"><button class="button button-primary" id="save-button" type="submit">Save all text changes <span>↗</span></button><a class="button button-outline" href="./?view=portfolio" target="_blank" rel="noreferrer">Preview portfolio ↗</a></div>
           </form>
           <p class="form-message" id="save-message" role="status"></p>
         </section>
@@ -61,6 +61,6 @@
       </div>
     </section>
   </main>
-  <footer class="footer admin-footer"><a href="/portfolio">← Back to portfolio</a><span>Owner access is private to this server.</span></footer>
+  <footer class="footer admin-footer"><a href="./?view=portfolio">← Back to portfolio</a><span>Owner access is private to this server.</span></footer>
 </body>
 </html>
