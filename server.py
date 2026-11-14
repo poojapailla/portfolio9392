@@ -63,6 +63,7 @@ INITIAL_CONTENT = {
             "institution": "Vijayaratna High School",
             "location": "Hyderabad",
             "degree": "SSC (Secondary School Certificate)",
+            "duration": "2021–2022",
             "result": "CGPA: 9.3",
         },
     ],
@@ -70,7 +71,7 @@ INITIAL_CONTENT = {
         {
             "company": "Thiranex",
             "role": "Full Stack Development Intern",
-            "dates": "",
+            "dates": "2021–2022",
             "responsibilities": [
                 "Worked as a Full Stack Development Intern, contributing to the design and development of web-based applications.",
                 "Gained hands-on experience across front-end and back-end technologies, collaborating on real-world project tasks.",
@@ -90,14 +91,14 @@ INITIAL_CONTENT = {
     "projects": [
         {
             "name": "Smart Expense Tracker",
-            "description": "Developed a Smart Expense Tracker using Python to monitor daily expenses and categorize financial transactions.",
-            "features": ["Expense logging", "Automatic categorization", "Budget tracking", "Visual reports", "Spending pattern analysis", "Personal financial management"],
+            "description": "Developed a Python application to track daily expenses and categorize financial transactions, helping users understand their spending and manage personal finances.",
+            "features": ["Expense logging", "Automatic transaction categorization", "Budget tracking", "Visual spending reports", "Spending pattern analysis", "Personal financial awareness"],
             "image": "",
             "link": "",
         },
         {
             "name": "Home Virtual Lab",
-            "description": "Developed a web-based application to simulate laboratory experiments in a virtual environment.",
+            "description": "Developed a web-based application that helps students explore laboratory experiments remotely through guided instructions and interactive visual results.",
             "features": ["Step-by-step experiment instructions", "Interactive visual experiment results", "Virtual laboratory environment", "Remote experiment learning", "Accessible practical learning without requiring physical lab equipment"],
             "image": "",
             "link": "",
@@ -106,7 +107,8 @@ INITIAL_CONTENT = {
     "skills": {
         "Programming Languages": ["Python", "Java", "SQL", "C"],
         "Web Technologies": ["HTML", "CSS", "JavaScript"],
-        "AI / ML": ["Generative AI Tools", "Prompt Engineering", "NumPy", "Pandas", "Machine Learning Fundamentals"],
+        "AI / ML": ["Generative AI Tools", "Prompt Engineering", "Machine Learning Fundamentals"],
+        "AI / ML Tools": ["NumPy", "Pandas"],
         "Core Computer Science Concepts": ["Advanced Data Structures", "Data Structures and Algorithms", "Programming Fundamentals"],
         "Soft Skills": ["Teamwork", "Collaboration", "Adaptability", "Problem Solving"],
     },
