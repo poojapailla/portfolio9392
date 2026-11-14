@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#100b1b">
+  <title>Owner Dashboard — Pailla Pooja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css"><script src="/admin.js" defer></script>
+</head>
+<body class="admin-body">
+  <header class="site-header admin-header"><a class="brand" href="/"><span class="brand-mark">PP</span><span>Pailla Pooja <span class="admin-label">OWNER</span></span></a><a class="back-link" href="/">View portfolio ↗</a></header>
+  <main class="admin-main">
+    <section class="login-card" id="auth-panel"><p class="eyebrow">PRIVATE OWNER AREA</p><h1 id="auth-title">Welcome back.</h1><p class="muted" id="auth-description">Sign in to update your portfolio content and uploads.</p><form id="auth-form"><label id="password-label" for="admin-password">Owner password</label><input id="admin-password" type="password" minlength="12" autocomplete="current-password" required><p class="form-hint" id="password-hint"></p><button class="button button-primary" type="submit" id="auth-submit">Sign in <span>↗</span></button><p class="form-message" id="auth-message" role="status"></p></form></section>
+    <section class="dashboard hidden" id="dashboard">
+      <div class="dashboard-heading"><div><p class="eyebrow">YOUR PRIVATE WORKSPACE</p><h1>Portfolio <span class="gradient-text">dashboard.</span></h1><p class="muted">Edit any section below. Changes are saved to your local SQLite database.</p></div><button class="button button-outline" id="logout-button">Sign out</button></div>
+      <div class="dashboard-columns">
+        <section class="editor-card"><div class="editor-top"><div><h2>Portfolio content</h2><p class="muted">Edit profile, education, experience, projects, skills, certifications, and resume.</p></div><span class="live-badge"><span class="status-dot"></span> Live content</span></div>
+          <label for="content-editor">Content (JSON)</label><textarea id="content-editor" spellcheck="false" aria-describedby="editor-hint"></textarea><p class="form-hint" id="editor-hint">Keep the JSON structure intact. Lists such as projects and skills can be extended without a fixed limit. Leave internship dates blank until you add the correct dates.</p><div class="editor-actions"><button class="button button-primary" id="save-button">Save changes <span>↗</span></button><a class="button button-outline" href="/" target="_blank" rel="noreferrer">Preview portfolio ↗</a></div><p class="form-message" id="save-message" role="status"></p>
+        </section>
+        <aside class="upload-card"><h2>Upload an asset</h2><p class="muted">Add a profile image, project image, certificate, or your latest resume. Copy the returned path into its matching JSON field.</p><form id="upload-form"><label for="asset-file">Choose an image or PDF</label><input id="asset-file" type="file" accept=".png,.jpg,.jpeg,.webp,.pdf" required><p class="form-hint">PNG, JPG, WEBP, or PDF · maximum 10 MB</p><button class="button button-outline" type="submit" id="upload-button">Upload file</button></form><div class="upload-result hidden" id="upload-result"><p>Uploaded successfully. Copy this path into the relevant <code>image</code>, <code>file</code>, or resume field in the JSON editor.</p><code id="upload-path"></code><button class="copy-button" id="copy-path">Copy path</button></div><p class="form-message" id="upload-message" role="status"></p>
+          <div class="dashboard-note"><strong>Your data stays yours.</strong><span>Portfolio content and uploaded files are stored on this server. Back up the <code>data</code> and <code>uploads</code> folders.</span></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <footer class="footer admin-footer"><a href="/">← Back to portfolio</a><span>Owner access is private to this server.</span></footer>
+</body>
+</html>

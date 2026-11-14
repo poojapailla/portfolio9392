@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100b1b">
+  <meta name="description" content="Portfolio of Pailla Pooja, B.Tech student in Artificial Intelligence and Machine Learning.">
+  <title>Pailla Pooja — AI &amp; ML Student</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Pailla Pooja home"><span class="brand-mark" id="brand-initials">PP</span><span id="brand-name">Pailla Pooja</span></a>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <nav class="navigation" id="navigation">
+      <a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#skills">Skills</a><a href="#education">Education</a>
+      <a class="nav-contact" href="#contact">Let’s talk <span>↗</span></a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero section-wrap" id="home">
+      <div class="hero-copy">
+        <div class="availability"><span class="status-dot"></span><span id="availability">Open to Internships</span></div>
+        <p class="eyebrow">HELLO, I’M</p>
+        <h1 id="hero-name">Pailla <span class="gradient-text">Pooja.</span></h1>
+        <p class="hero-title" id="hero-title">B.Tech Student — Artificial Intelligence &amp; Machine Learning</p>
+        <p class="hero-summary" id="hero-summary"></p>
+        <div class="hero-actions"><a class="button button-primary" href="#projects">Explore my work <span>↘</span></a><a class="button button-outline" id="hero-resume" href="#resume">View resume <span>↗</span></a></div>
+        <div class="hero-socials"><a id="email-link" href="mailto:poojapailla77@gmail.com">Email <span>↗</span></a><a id="github-link" href="https://github.com/poojapailla" target="_blank" rel="noreferrer">GitHub <span>↗</span></a><a id="linkedin-link" href="https://linkedin.com/in/pooja-pailla" target="_blank" rel="noreferrer">LinkedIn <span>↗</span></a></div>
+      </div>
+      <div class="hero-visual"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="portrait-frame"><div class="portrait-placeholder" id="portrait"><span id="portrait-initials">PP</span></div></div><div class="floating-note note-top"><span class="note-icon">✳</span><span>Curious mind<br><strong>Building for tomorrow</strong></span></div><div class="floating-note note-bottom"><span class="spark">✦</span>AI &amp; ML <span class="note-divider"></span> Hyderabad, India</div><div class="hero-glow"></div></div>
+      <a class="scroll-hint" href="#about"><span></span>SCROLL TO EXPLORE</a>
+    </section>
+    <section class="section-wrap section-block" id="about">
+      <div class="section-heading"><p class="eyebrow">01 — A LITTLE ABOUT ME</p><h2>Turning curiosity into <span class="gradient-text">possibility.</span></h2></div>
+      <div class="about-grid"><p class="about-copy" id="about-summary"></p><div class="about-facts"><div class="fact"><span class="fact-icon">⌖</span><div><small>BASED IN</small><strong id="location">Hyderabad, Telangana, India</strong></div></div><div class="fact"><span class="fact-icon">✉</span><div><small>REACH ME</small><a id="contact-email" href="mailto:poojapailla77@gmail.com">poojapailla77@gmail.com</a></div></div><div class="fact"><span class="fact-icon">↗</span><div><small>LET’S CONNECT</small><a id="contact-phone" href="tel:9392741369">9392741369</a></div></div></div></div>
+    </section>
+    <section class="section-wrap section-block" id="experience">
+      <div class="section-heading"><p class="eyebrow">02 — WHERE I’VE LEARNED</p><h2>Experience &amp; <span class="gradient-text">growth.</span></h2></div>
+      <div class="timeline" id="experience-list"></div>
+    </section>
+    <section class="section-wrap section-block" id="projects">
+      <div class="section-heading heading-row"><div><p class="eyebrow">03 — THINGS I’VE MADE</p><h2>Selected <span class="gradient-text">projects.</span></h2></div><span class="section-side-note">A growing collection of ideas<br>turned into real experiences.</span></div>
+      <div class="project-grid" id="project-list"></div>
+    </section>
+    <section class="section-wrap section-block" id="skills">
+      <div class="section-heading"><p class="eyebrow">04 — MY TOOLKIT</p><h2>Skills I’m <span class="gradient-text">growing.</span></h2></div>
+      <div class="skills-grid" id="skills-list"></div>
+    </section>
+    <section class="section-wrap section-block" id="education">
+      <div class="section-heading"><p class="eyebrow">05 — THE LEARNING PATH</p><h2>Education &amp; <span class="gradient-text">certifications.</span></h2></div>
+      <div class="education-grid"><div><h3 class="subsection-title">Education</h3><div class="education-list" id="education-list"></div></div><div><h3 class="subsection-title">Certifications</h3><div class="cert-list" id="certification-list"></div></div></div>
+    </section>
+    <section class="section-wrap resume-section" id="resume"><div><p class="eyebrow">WANT THE FULL PICTURE?</p><h2>Let’s make your<br>next idea <span class="gradient-text">happen.</span></h2></div><a class="button button-primary" id="resume-download" href="#contact">Get in touch <span>↗</span></a></section>
+    <section class="section-wrap section-block contact-section" id="contact"><div class="section-heading"><p class="eyebrow">06 — SAY HELLO</p><h2>Have an opportunity?<br><span class="gradient-text">I’d love to hear about it.</span></h2></div><div class="contact-card"><a id="contact-email-large" href="mailto:poojapailla77@gmail.com">poojapailla77@gmail.com</a><div class="contact-links"><a id="contact-linkedin" href="https://linkedin.com/in/pooja-pailla" target="_blank" rel="noreferrer">LinkedIn ↗</a><a id="contact-github" href="https://github.com/poojapailla" target="_blank" rel="noreferrer">GitHub ↗</a><a id="contact-phone-link" href="tel:9392741369">9392741369 ↗</a></div></div></section>
+  </main>
+  <footer class="footer"><a class="brand" href="#home"><span class="brand-mark" id="footer-initials">PP</span><span id="footer-name">Pailla Pooja</span></a><span>Designed with curiosity in Hyderabad, India.</span><a href="/admin" class="owner-link">Owner dashboard ↗</a><span>© <span id="year"></span> <span id="copyright-name">Pailla Pooja</span></span></footer>
+</body>
+</html>
