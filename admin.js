@@ -51,12 +51,169 @@ async function showDashboard() {
   dashboard.classList.remove("hidden");
   try {
     currentContent = await api("/api/content");
-    byId("content-editor").value = JSON.stringify(currentContent, null, 2);
+    fillTextEditor();
     renderProjects();
   } catch (error) {
     byId("save-message").textContent = error.message;
   }
 }
+
+function fillTextEditor() {
+  const profile = currentContent.profile || {};
+  const profileFields = {
+    "edit-name": profile.name,
+    "edit-initials": profile.initials,
+    "edit-title": profile.title,
+    "edit-availability": profile.availability,
+    "edit-email": profile.email,
+    "edit-phone": profile.phone,
+    "edit-location": profile.location,
+    "edit-image": profile.image,
+    "edit-linkedin": profile.linkedin,
+    "edit-github": profile.github,
+    "edit-summary": currentContent.summary,
+    "edit-education": (currentContent.education || []).map((item) => [
+      item.institution, item.degree || item.qualification, item.duration, item.result,
+      item.location, item.branch, (item.coursework || []).join(", "),
+    ].join(" | ")).join("\n"),
+    "edit-experience": (currentContent.experience || []).map((item) => [
+      `${item.company || ""} | ${item.role || ""} | ${item.dates || ""}`,
+      ...(item.responsibilities || []).map((duty) => `- ${duty}`),
+    ].join("\n")).join("\n\n"),
+    "edit-skills": Object.entries(currentContent.skills || {}).map(([category, skills]) => (
+      `${category}: ${(Array.isArray(skills) ? skills : []).join(", ")}`
+    )).join("\n"),
+    "edit-certifications": (currentContent.certifications || []).map((item) => [
+      item.name || "", item.certification || "", item.file || "",
+    ].join(" | ")).join("\n"),
+    "edit-resume": currentContent.resume?.file || "",
+  };
+  Object.entries(profileFields).forEach(([id, value]) => {
+    byId(id).value = value || "";
+  });
+}
+
+function splitFields(line) {
+  return line.split("|").map((field) => field.trim());
+}
+
+function existingBy(items, predicate) {
+  return items.find((item) => predicate(item)) || {};
+}
+
+function copyContent() {
+  return JSON.parse(JSON.stringify(currentContent));
+}
+
+function parseEducation(text) {
+  return text.split(/\r?\n/).map((line, index) => {
+    if (!line.trim()) return null;
+    const [institution, degree, duration, result, location, branch, coursework = ""] = splitFields(line);
+    if (!institution || !degree) {
+      throw new Error(`Education line ${index + 1} needs a school and qualification, separated by |.`);
+    }
+    const previous = existingBy(currentContent.education || [], (item) => item.institution === institution);
+    return {
+      ...previous,
+      institution,
+      degree,
+      duration,
+      result,
+      location,
+      branch,
+      coursework: coursework ? coursework.split(",").map((item) => item.trim()).filter(Boolean) : [],
+    };
+  }).filter(Boolean);
+}
+
+function parseExperience(text) {
+  return text.split(/\r?\n\s*\r?\n/).map((block, index) => {
+    if (!block.trim()) return null;
+    const lines = block.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+    const [company, role, dates = ""] = splitFields(lines.shift() || "");
+    if (!company || !role) {
+      throw new Error(`Experience block ${index + 1} needs a company and role on its first line, separated by |.`);
+    }
+    const previous = existingBy(currentContent.experience || [], (item) => item.company === company && item.role === role);
+    return {
+      ...previous,
+      company,
+      role,
+      dates,
+      responsibilities: lines.map((line) => line.replace(/^[-*•]\s*/, "")).filter(Boolean),
+    };
+  }).filter(Boolean);
+}
+
+function parseSkills(text) {
+  const skills = {};
+  text.split(/\r?\n/).forEach((line, index) => {
+    if (!line.trim()) return;
+    const separator = line.indexOf(":");
+    if (separator <= 0) throw new Error(`Skills line ${index + 1} needs a category followed by a colon.`);
+    const category = line.slice(0, separator).trim();
+    const items = line.slice(separator + 1).split(",").map((item) => item.trim()).filter(Boolean);
+    if (!category || !items.length) throw new Error(`Skills line ${index + 1} needs a category and at least one skill.`);
+    skills[category] = items;
+  });
+  return skills;
+}
+
+function parseCertifications(text) {
+  return text.split(/\r?\n/).map((line, index) => {
+    if (!line.trim()) return null;
+    const [name, certification, file = ""] = splitFields(line);
+    if (!name || !certification) {
+      throw new Error(`Certificate line ${index + 1} needs a provider and certification name, separated by |.`);
+    }
+    const previous = existingBy(currentContent.certifications || [], (item) => (
+      item.name === name && item.certification === certification
+    ));
+    return { ...previous, name, certification, file };
+  }).filter(Boolean);
+}
+
+byId("text-content-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  byId("save-message").style.color = "";
+  byId("save-message").textContent = "";
+  const saveButton = byId("save-button");
+  saveButton.disabled = true;
+  try {
+    const draft = copyContent();
+    draft.profile = {
+      ...draft.profile,
+      name: byId("edit-name").value.trim(),
+      initials: byId("edit-initials").value.trim() || "PP",
+      title: byId("edit-title").value.trim(),
+      availability: byId("edit-availability").value.trim(),
+      email: byId("edit-email").value.trim(),
+      phone: byId("edit-phone").value.trim(),
+      location: byId("edit-location").value.trim(),
+      image: byId("edit-image").value.trim(),
+      linkedin: byId("edit-linkedin").value.trim(),
+      github: byId("edit-github").value.trim(),
+    };
+    draft.summary = byId("edit-summary").value.trim();
+    draft.education = parseEducation(byId("edit-education").value);
+    draft.experience = parseExperience(byId("edit-experience").value);
+    draft.skills = parseSkills(byId("edit-skills").value);
+    draft.certifications = parseCertifications(byId("edit-certifications").value);
+    draft.resume = { ...draft.resume, file: byId("edit-resume").value.trim() };
+    await api("/api/content", { method: "PUT", body: JSON.stringify(draft) });
+    currentContent = draft;
+    fillTextEditor();
+    renderProjects();
+    byId("save-message").style.color = "#a9e9cf";
+    byId("save-message").textContent = "Your portfolio text has been saved.";
+  } catch (error) {
+    byId("save-message").textContent = error instanceof SyntaxError
+      ? "Could not read the portfolio content. Refresh and try again."
+      : error.message;
+  } finally {
+    saveButton.disabled = false;
+  }
+});
 
 function renderProjects() {
   const list = byId("admin-project-list");
@@ -128,17 +285,10 @@ function closeProjectForm() {
 }
 
 async function saveProjectList(projects) {
-  const draft = JSON.parse(byId("content-editor").value);
-  if (!draft || Array.isArray(draft) || typeof draft !== "object") {
-    throw new Error("Portfolio content must be a JSON object.");
-  }
-  if (JSON.stringify(draft.projects || []) !== JSON.stringify(currentContent.projects || [])) {
-    throw new Error("Save your project edits in the JSON editor first, then use the project manager.");
-  }
+  const draft = copyContent();
   draft.projects = projects;
   await api("/api/content", { method: "PUT", body: JSON.stringify(draft) });
   currentContent = draft;
-  byId("content-editor").value = JSON.stringify(currentContent, null, 2);
   renderProjects();
 }
 
@@ -147,15 +297,10 @@ async function deleteProject(index) {
   if (!project || !window.confirm(`Delete “${project.name || "Untitled project"}”?`)) return;
   byId("projects-message").textContent = "";
   try {
-    const draft = JSON.parse(byId("content-editor").value);
-    if (!Array.isArray(draft.projects)) throw new Error("Projects must be a list in the portfolio content.");
-    if (JSON.stringify(draft.projects) !== JSON.stringify(currentContent.projects || [])) {
-      throw new Error("Save your project edits in the JSON editor first, then use the project manager.");
-    }
+    const draft = copyContent();
     draft.projects.splice(index, 1);
     await api("/api/content", { method: "PUT", body: JSON.stringify(draft) });
     currentContent = draft;
-    byId("content-editor").value = JSON.stringify(currentContent, null, 2);
     renderProjects();
     byId("projects-message").style.color = "#a9e9cf";
     byId("projects-message").textContent = "Project deleted.";
@@ -217,23 +362,6 @@ byId("auth-form").addEventListener("submit", async (event) => {
     await showDashboard();
   } catch (error) {
     byId("auth-message").textContent = error.message;
-  }
-});
-
-byId("save-button").addEventListener("click", async () => {
-  byId("save-message").textContent = "";
-  try {
-    const content = JSON.parse(byId("content-editor").value);
-    if (!content || Array.isArray(content) || typeof content !== "object") throw new Error("Content must be a JSON object.");
-    await api("/api/content", { method: "PUT", body: JSON.stringify(content) });
-    currentContent = content;
-    byId("content-editor").value = JSON.stringify(content, null, 2);
-    renderProjects();
-    byId("save-message").style.color = "#a9e9cf";
-    byId("save-message").textContent = "Saved. The public portfolio now reflects your changes.";
-  } catch (error) {
-    byId("save-message").style.color = "";
-    byId("save-message").textContent = error instanceof SyntaxError ? `Invalid JSON: ${error.message}` : error.message;
   }
 });
 

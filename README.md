@@ -13,7 +13,9 @@ The owner password can be any non-empty text and is stored as a salted PBKDF2 ha
 
 ## Edit content and upload assets
 
-The dashboard's **Projects** manager includes **Add project** and per-project edit/delete actions. Enter a name, description, optional URL or image path, and optional features (one per line), then save; the public portfolio updates immediately. There is no project-count limit. Save any project edits in the JSON editor before using the project manager. The `dates` fields for internships start blank; only enter dates you can verify.
+Edit profile, contact details, summary, education, work experience, skills, certifications, and resume in the dashboard's plain-text fields. Education uses one pipe-separated school per line; experience uses a `Company | Role | Dates` heading followed by `- responsibility` lines, with a blank line between jobs; skills use `Category: skill, skill`; certifications use `Provider | Certificate name | optional file path`. Save all text changes to publish them.
+
+The **Projects** manager includes **Add project** and per-project edit/delete actions. Enter a name, description, optional URL or image path, and optional features (one per line), then save; the public portfolio updates immediately. There is no project-count limit.
 
 Upload an image or PDF in the dashboard and copy its returned path into the relevant field:
 
