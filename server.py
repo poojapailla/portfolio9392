@@ -24,6 +24,7 @@ DATABASE = DATA_DIR / "portfolio.sqlite3"
 MAX_UPLOAD = 10 * 1024 * 1024
 SESSION_TTL = 12 * 60 * 60
 SECURE_COOKIE = os.environ.get("PORTFOLIO_HTTPS") == "1"
+ADMIN_USERNAME = "pooja9392"
 SESSIONS = {}
 SESSIONS_LOCK = __import__("threading").Lock()
 
@@ -92,23 +93,23 @@ INITIAL_CONTENT = {
         {
             "name": "Smart Expense Tracker",
             "description": "Developed a Python application to track daily expenses and categorize financial transactions, helping users understand their spending and manage personal finances.",
-            "features": ["Expense logging", "Automatic transaction categorization", "Budget tracking", "Visual spending reports", "Spending pattern analysis", "Personal financial awareness"],
+            "features": ["Expense logging", "Automatic transaction categorization", "Budget tracking", "Visual spending reports", "Spending pattern analysis", "Personal financial habit awareness"],
             "image": "",
             "link": "",
         },
         {
             "name": "Home Virtual Lab",
             "description": "Developed a web-based application that helps students explore laboratory experiments remotely through guided instructions and interactive visual results.",
-            "features": ["Step-by-step experiment instructions", "Interactive visual experiment results", "Virtual laboratory environment", "Remote experiment learning", "Accessible practical learning without requiring physical lab equipment"],
+            "features": ["Step-by-step experiment instructions", "Interactive visual experiment results", "Virtual laboratory environment", "Remote experiment learning and visualization", "Accessible practical learning without requiring physical lab equipment"],
             "image": "",
             "link": "",
         },
     ],
     "skills": {
-        "Programming Languages": ["Python", "Java", "SQL", "C"],
+        "Languages": ["Python", "Java", "SQL", "C"],
         "Web Technologies": ["HTML", "CSS", "JavaScript"],
-        "AI / ML": ["Generative AI Tools", "Prompt Engineering", "Machine Learning Fundamentals"],
-        "AI / ML Tools": ["NumPy", "Pandas"],
+        "AI": ["Generative AI Tools", "Prompt Engineering"],
+        "Tools": ["Generative AI Tools", "NumPy", "Pandas"],
         "Core Computer Science Concepts": ["Advanced Data Structures", "Data Structures and Algorithms", "Programming Fundamentals"],
         "Soft Skills": ["Teamwork", "Collaboration", "Adaptability", "Problem Solving"],
     },
@@ -139,7 +140,13 @@ def initialize():
     UPLOAD_DIR.mkdir(exist_ok=True)
     with db_connection() as db:
         db.execute("CREATE TABLE IF NOT EXISTS content (id INTEGER PRIMARY KEY CHECK(id = 1), body TEXT NOT NULL)")
-        db.execute("CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY CHECK(id = 1), salt BLOB NOT NULL, password_hash BLOB NOT NULL)")
+        db.execute(
+            "CREATE TABLE IF NOT EXISTS admin (id INTEGER PRIMARY KEY CHECK(id = 1), "
+            "username TEXT NOT NULL DEFAULT 'pooja9392', salt BLOB NOT NULL, password_hash BLOB NOT NULL)"
+        )
+        columns = {row["name"] for row in db.execute("PRAGMA table_info(admin)")}
+        if "username" not in columns:
+            db.execute("ALTER TABLE admin ADD COLUMN username TEXT NOT NULL DEFAULT 'pooja9392'")
         db.execute(
             "INSERT OR IGNORE INTO content (id, body) VALUES (1, ?)",
             (json.dumps(INITIAL_CONTENT, ensure_ascii=False),),
@@ -223,12 +230,14 @@ class Handler(BaseHTTPRequestHandler):
             return
         if path == "/":
             path = "/index.html"
+        if path == "/portfolio":
+            path = "/index.html"
         if path == "/admin":
             path = "/admin.html"
         self.serve_static(path)
 
     def serve_static(self, path):
-        if path not in {"/index.html", "/admin.html", "/styles.css", "/app.js", "/admin.js"}:
+        if path not in {"/index.html", "/admin.html", "/styles.css", "/entry.css", "/app.js", "/admin.js"}:
             self.send_error(HTTPStatus.NOT_FOUND)
             return
         candidate = (ROOT / path.lstrip("/")).resolve()
@@ -280,14 +289,21 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(HTTPStatus.FORBIDDEN, {"error": "Initial setup is only allowed from this computer."})
                 return
             body = self.read_json()
+            username = body.get("username", "")
             password = body.get("password", "")
+            if not isinstance(username, str) or not hmac.compare_digest(username, ADMIN_USERNAME):
+                self.send_json(HTTPStatus.BAD_REQUEST, {"error": "Admin ID must be pooja9392."})
+                return
             if not isinstance(password, str) or len(password) < 12:
                 self.send_json(HTTPStatus.BAD_REQUEST, {"error": "Use a password with at least 12 characters."})
                 return
             salt = secrets.token_bytes(16)
             digest = password_hash(password, salt)
             with db_connection() as db:
-                db.execute("INSERT INTO admin (id, salt, password_hash) VALUES (1, ?, ?)", (salt, digest))
+                db.execute(
+                    "INSERT INTO admin (id, username, salt, password_hash) VALUES (1, ?, ?, ?)",
+                    (ADMIN_USERNAME, salt, digest),
+                )
             self.create_session()
         except sqlite3.IntegrityError:
             self.send_json(HTTPStatus.CONFLICT, {"error": "The owner account is already set up. Please sign in."})
@@ -297,15 +313,19 @@ class Handler(BaseHTTPRequestHandler):
     def login(self):
         try:
             body = self.read_json()
+            username = body.get("username", "")
             password = body.get("password", "")
+            if not isinstance(username, str):
+                self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "Invalid admin ID or password."})
+                return
             with db_connection() as db:
-                row = db.execute("SELECT salt, password_hash FROM admin WHERE id = 1").fetchone()
+                row = db.execute("SELECT salt, password_hash FROM admin WHERE id = 1 AND username = ?", (username,)).fetchone()
             if not row:
-                self.send_json(HTTPStatus.CONFLICT, {"error": "Create your owner password first."})
+                self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "Invalid admin ID or password."})
             elif isinstance(password, str) and hmac.compare_digest(password_hash(password, row["salt"]), row["password_hash"]):
                 self.create_session()
             else:
-                self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "Incorrect password."})
+                self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "Invalid admin ID or password."})
         except (ValueError, json.JSONDecodeError) as error:
             self.send_json(HTTPStatus.BAD_REQUEST, {"error": str(error) or "Invalid request."})
 

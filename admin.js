@@ -19,10 +19,11 @@ function showAuth(needsSetup) {
   setupRequired = needsSetup;
   authPanel.classList.remove("hidden");
   dashboard.classList.add("hidden");
+  byId("admin-username").value = "pooja9392";
   byId("auth-title").textContent = needsSetup ? "Set up your dashboard." : "Welcome back.";
   byId("auth-description").textContent = needsSetup
-    ? "Create a strong owner password. This first-time setup is only available from this computer."
-    : "Sign in to update your portfolio content and uploads.";
+    ? "Your admin ID is pooja9392. Create a strong password to secure the owner dashboard."
+    : "Enter your admin ID and password to update your portfolio content and uploads.";
   byId("password-label").textContent = needsSetup ? "Create owner password" : "Owner password";
   byId("admin-password").autocomplete = needsSetup ? "new-password" : "current-password";
   byId("password-hint").textContent = needsSetup ? "Use at least 12 characters. Store it somewhere safe; it cannot be recovered." : "";
@@ -62,7 +63,7 @@ byId("auth-form").addEventListener("submit", async (event) => {
   try {
     const session = await api(setupRequired ? "/api/setup" : "/api/login", {
       method: "POST",
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ username: byId("admin-username").value, password }),
     });
     csrfToken = session.csrf;
     await showDashboard();

@@ -10,9 +10,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/entry.css">
   <script src="/app.js" defer></script>
 </head>
-<body>
+<body class="mode-select">
+  <section class="entry-screen" aria-labelledby="entry-title">
+    <a class="brand entry-brand" href="/" aria-label="Pailla Pooja home"><span class="brand-mark">PP</span><span>Pailla Pooja</span></a>
+    <div class="entry-card">
+      <p class="eyebrow">WELCOME TO MY SPACE</p>
+      <h1 id="entry-title">Curiosity meets <span class="gradient-text">possibility.</span></h1>
+      <p class="entry-description">Choose how you’d like to continue.</p>
+      <div class="entry-actions">
+        <a class="button button-primary" href="/portfolio">Visit portfolio <span>↗</span></a>
+        <a class="button button-outline" href="/admin">Admin sign in <span>↗</span></a>
+      </div>
+      <p class="entry-note">Pailla Pooja · AI &amp; Machine Learning</p>
+    </div>
+    <span class="entry-footer">Hyderabad, Telangana, India</span>
+  </section>
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Pailla Pooja home"><span class="brand-mark" id="brand-initials">PP</span><span id="brand-name">Pailla Pooja</span></a>
     <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>

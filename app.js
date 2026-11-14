@@ -14,6 +14,10 @@ const make = (tag, className, content) => {
   return element;
 };
 
+if (window.location.pathname === "/portfolio") {
+  document.body.classList.remove("mode-select");
+}
+
 async function loadPortfolio() {
   try {
     const response = await fetch("/api/content", { cache: "no-store" });
